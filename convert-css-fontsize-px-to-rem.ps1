@@ -1,4 +1,4 @@
-<#  
+<#
   .DESCRIPTION
   A script that parses a CSS file which its `font-size` rules are written with
   units of `px`, and converts them to `font-size` with `rem` units.
@@ -28,39 +28,36 @@
 
 param ([string]$TargetCssFile, [string]$PathToSaveNewCssFile, [int]$RemPxValue)
 
-function Convert-Css-Fontsize-Px-To-Rem
-{
 
-    # Init empty list that will serve as the new CSS file.
-    $newCssFileAsStringList = @()
+# Init empty list that will serve as the new CSS file.
+$newCssFileAsStringList = @()
 
-    # Read CSS file.
-    [System.IO.StreamReader]$sr = [System.IO.File]::Open($TargetCssFile, [System.IO.FileMode]::Open)
-    while (-not $sr.EndOfStream){
-        $line = $sr.ReadLine()
+# Read CSS file.
+[System.IO.StreamReader]$sr = [System.IO.File]::Open($TargetCssFile, [System.IO.FileMode]::Open)
+while (-not $sr.EndOfStream){
+    $line = $sr.ReadLine()
 
-        $pxValueAsString = $line |
-            Select-String -Pattern "font-size:(.*)px" -AllMatches |
-                Foreach {$_.Matches} |
-                    Foreach {$_.Groups[1].Value}
+    $pxValueAsString = $line |
+        Select-String -Pattern "font-size:(.*)px" -AllMatches |
+            Foreach {$_.Matches} |
+                Foreach {$_.Groups[1].Value}
 
-        $newCssFileAsStringList+=$line
-        if ($pxValueAsString -eq $null){
-            continue
-        }
-
-        [int]$pxValueAsInt = [convert]::ToInt32($pxValueAsString)
-        $remValue = $pxValueAsInt / $RemPxValue
-
-        $newLine = $line -replace ("font-size:.*px;?", "font-size: ${remValue}rem;")
-
-        # Replace last element in `$newCssFileAsStringList` with `$newline`.
-        $newCssFileAsStringList[$newCssFileAsStringList.Count - 1]=$newline
+    $newCssFileAsStringList+=$line
+    if ($pxValueAsString -eq $null){
+        continue
     }
-    $sr.Close() 
 
-    # Write-Output($newCssFileAsStringList) # Debug
+    [int]$pxValueAsInt = [convert]::ToInt32($pxValueAsString)
+    $remValue = $pxValueAsInt / $RemPxValue
 
-    # Write new file.
-    $newCssFileAsStringList | Out-File -Force $PathToSaveNewCssFile    
+    $newLine = $line -replace ("font-size:.*px;?", "font-size: ${remValue}rem;")
+
+    # Replace last element in `$newCssFileAsStringList` with `$newline`.
+    $newCssFileAsStringList[$newCssFileAsStringList.Count - 1]=$newline
 }
+$sr.Close() 
+
+# Write-Output($newCssFileAsStringList) # Debug
+
+# Write new file.
+$newCssFileAsStringList | Out-File -Force $PathToSaveNewCssFile    
