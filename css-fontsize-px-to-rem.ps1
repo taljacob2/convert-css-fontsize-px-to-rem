@@ -1,49 +1,66 @@
-<#
-A script that parses a CSS file which its `font-size` rules are written with
-units of `px`, and converts them to `font-size` with `rem` units.
+<#  
+  .DESCRIPTION
+  A script that parses a CSS file which its `font-size` rules are written with
+  units of `px`, and converts them to `font-size` with `rem` units.
 
-Author: Tal Jacob
+  .PARAMETER TargetCssFile
+  Specify the path to the target CSS file, that you wish to covert its rules of
+  `font-size: *px` to `font-size: *rem`.
+
+  .PARAMETER PathToSaveNewCssFile
+  Specify where to save the new CSS file.
+  ATTENTION: This **cannot** be `$TargetCssFile`.
+
+  .PARAMETER RemPxValue
+  Specify the `:root`'s `font-size`'s `px` value. By default, in every browser,
+  the `px` value is `16`.
+
+  .OUTPUTS
+  convert-css-fontsize-px-to-rem.ps1 generates the new conveted CSS file to
+  the path specified in `$PathToSaveNewCssFile`.
+
+  .EXAMPLE
+  PS> .\convert-css-fontsize-px-to-rem.ps1 -targetcssfile src\style.css -pathtosavenewcssfile src\new-style.css -rempxvalue 16
+
+  .EXAMPLE
+  PS> .\convert-css-fontsize-px-to-rem.ps1 -TargetCssFile src/style.css -PathToSaveNewCssFile src/new-style.css -RemPxValue 14
 #>
 
-# ------------------------------- Parameters  ---------------------------------- 
+param ([string]$TargetCssFile, [string]$PathToSaveNewCssFile, [int]$RemPxValue)
 
-$targetCssFile = "src/style.css"
+function Convert-Css-Fontsize-Px-To-Rem
+{
 
-# ATTENTION: This **cannot** be `$targetCssFile`.
-$PATH_TO_SAVE_NEW_CSS_FILE = "src/new-style.css"
-$REM_PX_VALUE = 14
+    # Init empty list that will serve as the new CSS file.
+    $newCssFileAsStringList = @()
 
-# ---------------------------------- Code -------------------------------------- 
+    # Read CSS file.
+    [System.IO.StreamReader]$sr = [System.IO.File]::Open($TargetCssFile, [System.IO.FileMode]::Open)
+    while (-not $sr.EndOfStream){
+        $line = $sr.ReadLine()
 
-# Init empty list that will serve as the new CSS file.
-$newCssFileAsStringList = @()
+        $pxValueAsString = $line |
+            Select-String -Pattern "font-size:(.*)px" -AllMatches |
+                Foreach {$_.Matches} |
+                    Foreach {$_.Groups[1].Value}
 
-# Read CSS file.
-[System.IO.StreamReader]$sr = [System.IO.File]::Open($targetCssFile, [System.IO.FileMode]::Open)
-while (-not $sr.EndOfStream){
-    $line = $sr.ReadLine()
+        $newCssFileAsStringList+=$line
+        if ($pxValueAsString -eq $null){
+            continue
+        }
 
-    $pxValueAsString = $line |
-        Select-String -Pattern "font-size:(.*)px" -AllMatches |
-            Foreach {$_.Matches} |
-                Foreach {$_.Groups[1].Value}
+        [int]$pxValueAsInt = [convert]::ToInt32($pxValueAsString)
+        $remValue = $pxValueAsInt / $RemPxValue
 
-    $newCssFileAsStringList+=$line
-    if ($pxValueAsString -eq $null){
-        continue
+        $newLine = $line -replace ("font-size:.*px;?", "font-size: ${remValue}rem;")
+
+        # Replace last element in `$newCssFileAsStringList` with `$newline`.
+        $newCssFileAsStringList[$newCssFileAsStringList.Count - 1]=$newline
     }
+    $sr.Close() 
 
-    [int]$pxValueAsInt = [convert]::ToInt32($pxValueAsString)
-    $remValue = $pxValueAsInt / $REM_PX_VALUE
+    # Write-Output($newCssFileAsStringList) # Debug
 
-    $newLine = $line -replace ("font-size:.*px;?", "font-size: ${remValue}rem;")
-
-    # Replace last element in `$newCssFileAsStringList` with `$newline`.
-    $newCssFileAsStringList[$newCssFileAsStringList.Count - 1]=$newline
+    # Write new file.
+    $newCssFileAsStringList | Out-File -Force $PathToSaveNewCssFile    
 }
-$sr.Close() 
-
-# Write-Output($newCssFileAsStringList) # Debug
-
-# Write new file.
-$newCssFileAsStringList | Out-File -Force $PATH_TO_SAVE_NEW_CSS_FILE
