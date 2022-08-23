@@ -55,7 +55,7 @@ while (-not $sr.EndOfStream)
     [int]$pxValueAsInt = [convert]::ToInt32($pxValueAsString)
     $remValue = $pxValueAsInt / $RemPxValue
 
-    $newLine = $line -replace ("font-size:.*px;?", "font-size: ${remValue}rem;")
+    $newLine = $line -replace ("font-size:.*px", "font-size: ${remValue}rem")
 
     # Replace last element in `$newCssFileAsStringList` with `$newline`.
     $newCssFileAsStringList[$newCssFileAsStringList.Count - 1]=$newline
