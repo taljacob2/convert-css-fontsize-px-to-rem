@@ -26,7 +26,10 @@
   PS> .\convert-css-fontsize-px-to-rem.ps1 -TargetCssFile src/style.css -PathToSaveNewCssFile src/new-style.css -RemPxValue 14
 #>
 
-param ([string]$TargetCssFile, [string]$PathToSaveNewCssFile, [int]$RemPxValue)
+param (
+    [parameter(mandatory)][string]$TargetCssFile,
+    [parameter(mandatory)][string]$PathToSaveNewCssFile,
+    [int]$RemPxValue = 16)
 
 
 # Init empty list that will serve as the new CSS file.
