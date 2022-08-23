@@ -36,8 +36,10 @@ param (
 $newCssFileAsStringList = @()
 
 # Read CSS file.
-[System.IO.StreamReader]$sr = [System.IO.File]::Open($TargetCssFile, [System.IO.FileMode]::Open)
-while (-not $sr.EndOfStream){
+[System.IO.StreamReader]$sr = 
+    [System.IO.File]::Open($TargetCssFile, [System.IO.FileMode]::Open)
+while (-not $sr.EndOfStream)
+{
     $line = $sr.ReadLine()
 
     $pxValueAsString = $line |
