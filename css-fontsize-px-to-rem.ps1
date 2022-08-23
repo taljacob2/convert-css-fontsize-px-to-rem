@@ -1,6 +1,6 @@
 <#
 A script that parses a CSS file which its `font-size` rules are written with
-units of `px`, and converts those lines to `font-size` with `rem` units.
+units of `px`, and converts them to `font-size` with `rem` units.
 
 Author: Tal Jacob
 #>
