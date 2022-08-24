@@ -15,15 +15,25 @@
   Specify the `:root`'s `font-size`'s `px` value. By default, in every browser,
   the `px` value is `16`.
 
+  .INPUTS
+  None. You cannot pipe objects to this script.
+
   .OUTPUTS
   convert-css-fontsize-px-to-rem.ps1 generates the new conveted CSS file to
   the path specified in `$PathToSaveNewCssFile`.
+
+  .NOTES
+  MIT License
+  Author: Tal Jacob
 
   .EXAMPLE
   PS> .\convert-css-fontsize-px-to-rem.ps1 -targetcssfile src\style.css -pathtosavenewcssfile src\new-style.css -rempxvalue 16
 
   .EXAMPLE
   PS> .\convert-css-fontsize-px-to-rem.ps1 -TargetCssFile src/style.css -PathToSaveNewCssFile src/new-style.css -RemPxValue 14
+
+  .LINK
+  Online version: https://github.com/taljacob2/convert-css-fontsize-px-to-rem
 #>
 
 param (
