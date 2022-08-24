@@ -23,6 +23,9 @@ In case you encouter an error, try running with:
 powershell.exe -NoLogo -ExecutionPolicy Bypass -Command ".\convert-css-fontsize-px-to-rem.ps1 -TargetCssFile <TargetCssFile> -PathToSaveNewCssFile <PathToSaveNewCssFile> -RemPxValue <RemPxValue>"
 ```
 
+> **NOTE:**
+> The parameter `RemPxValue` is not mandatory. Its default value is `16`.
+
 ## Help
 
 To view the full documentation of the script, open *powershell.exe* and run:
