@@ -3,7 +3,15 @@
 A script that parses a CSS file which its `font-size` rules are written with
 units of `px`, and converts them to `font-size` with `rem` units.
 
-## Run
+## Usage
+
+### Clone The Project
+
+```
+git clone https://github.com/taljacob2/convert-css-fontsize-px-to-rem
+```
+
+### Run
 
 Open *powershell.exe* and run:
 ```
