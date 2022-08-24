@@ -30,6 +30,9 @@
   PS> .\convert-css-fontsize-px-to-rem.ps1 -targetcssfile src\style.css -pathtosavenewcssfile src\new-style.css -rempxvalue 16
 
   .EXAMPLE
+  PS> .\convert-css-fontsize-px-to-rem.ps1 -targetcssfile src\style.css -pathtosavenewcssfile src\new-style.css
+
+  .EXAMPLE
   PS> .\convert-css-fontsize-px-to-rem.ps1 -TargetCssFile src/style.css -PathToSaveNewCssFile src/new-style.css -RemPxValue 14
 
   .LINK
